@@ -10,14 +10,25 @@ const moment = require("moment");
 
 const tweet = require("./lib/tweet");
 
+const Raven = require("raven");
+Raven.config(process.env.SENTRY_DSN).install();
+
+function logError(error) {
+  if (process.env.NODE_ENV !== "development") {
+    Raven.captureException(error);
+  } else {
+    console.error(error);
+  }
+}
+
 // Require model
 require("./models/Post");
 
 // Connect to mLab MongoDB
-mongoose.connect(process.env.DATABASE).catch(err => console.error(err));
+mongoose.connect(process.env.DATABASE).catch(logError);
 
 // Kick it off
-(async () => {
+Raven.context(async () => {
   let feed = await parser.parseURL(
     "http://www.enworld.org/forum/external.php?do=rss&type=newcontent&sectionid=1&days=120&count=20"
   );
@@ -39,10 +50,10 @@ mongoose.connect(process.env.DATABASE).catch(err => console.error(err));
       try {
         await tweet(`${title} ${url}`);
       } catch (err) {
-        console.error(err);
+        logError(err);
       }
     }
   });
 
   setTimeout(() => process.exit(), 10 * 1000); // ten seconds then exit
-})();
+});

@@ -21,9 +21,15 @@ function logError(error) {
 }
 
 module.exports = async (req, res) => {
-  let feed = await parser.parseURL(
-    "http://www.enworld.org/forum/external.php?do=rss&type=newcontent&sectionid=1&days=120&count=20"
-  );
+  const feed = await parser
+    .parseURL(
+      "http://www.enworld.org/forum/external.php?do=rss&type=newcontent&sectionid=1&days=120&count=20"
+    )
+    .catch(logError);
+
+  if (!feed) {
+    return res.status(404).end("Feed not found.");
+  }
 
   const Post = mongoose.model("Post");
 
@@ -31,7 +37,7 @@ module.exports = async (req, res) => {
     const { title, pubDate, link } = item;
     const url = link.replace(/-.*?$/, ""); // only match post ID
 
-    const count = await Post.countDocuments({ url });
+    const count = await Post.count({ url });
     if (count == 0) {
       const published_at = format(pubDate, "YYYY-MM-DD HH:mm:ss.SSS");
       const newPost = new Post({ title, published_at, url });
@@ -45,5 +51,5 @@ module.exports = async (req, res) => {
     }
   });
 
-  res.end("Finished sending tweets.");
+  res.status(200).end("Finished sending tweets.");
 };

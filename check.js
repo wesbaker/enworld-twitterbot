@@ -1,7 +1,7 @@
 "use strict";
 
 require("dotenv").config();
-const moment = require("moment");
+const format = require("date-fns/format");
 const mongoose = require("mongoose");
 const Parser = require("rss-parser");
 const Raven = require("raven");
@@ -27,25 +27,23 @@ module.exports = async (req, res) => {
 
   const Post = mongoose.model("Post");
 
-  await Promise.all(
-    feed.items.map(async item => {
-      const { title, pubDate, link } = item;
-      const url = link.replace(/-.*?$/, ""); // only match post ID
+  feed.items.map(async item => {
+    const { title, pubDate, link } = item;
+    const url = link.replace(/-.*?$/, ""); // only match post ID
 
-      const count = await Post.count({ url });
-      if (count == 0) {
-        const published_at = moment(pubDate).format("YYYY-MM-DD HH:mm:ss.SSS");
-        const newPost = new Post({ title, published_at, url });
-        await newPost.save();
+    const count = await Post.countDocuments({ url });
+    if (count == 0) {
+      const published_at = format(pubDate, "YYYY-MM-DD HH:mm:ss.SSS");
+      const newPost = new Post({ title, published_at, url });
+      await newPost.save();
 
-        try {
-          await tweet(`${title} ${url}`);
-        } catch (err) {
-          logError(err);
-        }
+      try {
+        await tweet(`${title} ${url}`);
+      } catch (err) {
+        logError(err);
       }
-    })
-  );
+    }
+  });
 
   res.end("Finished sending tweets.");
 };

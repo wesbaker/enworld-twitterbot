@@ -23,7 +23,7 @@ function logError(error) {
 module.exports = async (req, res) => {
   const feed = await parser
     .parseURL(
-      "www.enworld.org/ewr-porta/index.rss"
+      "https://www.enworld.org/ewr-porta/index.rss"
     )
     .catch(logError);
 

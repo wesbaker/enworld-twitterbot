@@ -22,9 +22,7 @@ function logError(error) {
 
 module.exports = async (req, res) => {
   const feed = await parser
-    .parseURL(
-      "https://www.enworld.org/ewr-porta/index.rss"
-    )
+    .parseURL("https://www.enworld.org/ewr-porta/index.rss")
     .catch(logError);
 
   if (!feed) {
@@ -33,23 +31,21 @@ module.exports = async (req, res) => {
 
   const Post = mongoose.model("Post");
 
-  feed.items.map(async item => {
+  const promises = feed.items.map(async item => {
     const { title, pubDate, link } = item;
-    const url = link.replace(/-.*?$/, ""); // only match post ID
 
-    const count = await Post.count({ url });
+    const count = await Post.count({ url: link });
     if (count == 0) {
       const published_at = format(pubDate, "YYYY-MM-DD HH:mm:ss.SSS");
-      const newPost = new Post({ title, published_at, url });
+      const newPost = new Post({ title, published_at, link });
       await newPost.save();
-
-      try {
-        await tweet(`${title} ${url}`);
-      } catch (err) {
-        logError(err);
-      }
+      return tweet(`${title} ${link}`).catch(logError);
+    } else {
+      return null;
     }
   });
+
+  await Promise.all(promises);
 
   res.status(200).end("Finished sending tweets.");
 };

@@ -2,6 +2,8 @@
 
 require("dotenv").config();
 const format = require("date-fns/format");
+const parse = require("date-fns/parse");
+const compareAsc = require("date-fns/compare_asc");
 const mongoose = require("mongoose");
 const Parser = require("rss-parser");
 const Raven = require("raven");
@@ -32,18 +34,26 @@ module.exports = async (req, res) => {
   const Post = mongoose.model("Post");
 
   const promises = feed.items.map(async item => {
-    const { title, pubDate, link } = item;
+    const { title, pubDate, link: url } = item;
 
-    const count = await Post.count({ url: link });
+    const count = await Post.count({ url });
     if (count == 0) {
       const published_at = format(pubDate, "YYYY-MM-DD HH:mm:ss.SSS");
-      const newPost = new Post({ title, published_at, link });
+      const newPost = new Post({ title, published_at, url });
       await newPost.save();
-      return tweet(`${title} ${link}`).catch(logError);
+      return tweet(`${title} ${url}`).catch(logError);
     } else {
       return null;
     }
   });
+
+  // Delete all posts older than what's in the feed
+  const oldestDate = feed.items
+    .map(item => parse(item.pubDate))
+    .sort(compareAsc)[0];
+  promises.push(Post.deleteMany({ published_at: { $lt: oldestDate } }));
+  // Clean up any records without URLs
+  promises.push(Post.deleteMany({ url: null }));
 
   await Promise.all(promises);
 

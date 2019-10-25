@@ -21,7 +21,7 @@
   "dependencies": {
     "date-fns": "^2.0.0",
     "dotenv": "^8.0.0",
-    "mongoose": "^5.0.11",
+    "mongoose": "^5.7.5",
     "raven": "^2.6.4",
     "rss-parser": "^3.7.2",
     "twitter": "^1.7.1"

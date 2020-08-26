@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "check.js",
+      "use": "@now/node"
+    }
+  ],
+  "alias": [
+    "enworld-twitterbot"
+  ]
+}

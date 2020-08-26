@@ -10,7 +10,9 @@ const tweet = require("../lib/tweet");
 Raven.config(process.env.SENTRY_DSN).install();
 require("../models/Post");
 const parser = new Parser();
-mongoose.connect(process.env.DATABASE).catch(logError);
+mongoose
+  .connect(process.env.DATABASE_URI, { dbName: process.env.DATABASE })
+  .catch(logError);
 
 function logError(error) {
   if (process.env.NODE_ENV !== "development") {

@@ -55,7 +55,7 @@ module.exports = async (req, res) => {
   // Clean up any records without URLs
   promises.push(Post.deleteMany({ url: null }));
 
-  await Promise.all(promises);
+  await Promise.all(promises).catch(logError);
 
   res.status(200).end("Finished sending tweets.");
 };

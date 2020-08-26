@@ -11,7 +11,13 @@ Raven.config(process.env.SENTRY_DSN).install();
 require("../models/Post");
 const parser = new Parser();
 mongoose
-  .connect(process.env.DATABASE_URI, { dbName: process.env.DATABASE })
+  .connect(process.env.DATABASE_URI, {
+    dbName: process.env.DATABASE,
+    auth: {
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+    },
+  })
   .catch(logError);
 
 function logError(error) {

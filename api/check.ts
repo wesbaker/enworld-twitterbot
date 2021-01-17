@@ -5,7 +5,7 @@ import compareAsc from "date-fns/compareAsc";
 import mongoose from "mongoose";
 import Parser from "rss-parser";
 import Raven from "raven";
-import tweet from "../lib/tweet";
+import tweet, { ResponseData } from "../lib/tweet";
 import "../models/Post";
 import { NowRequest, NowResponse } from "@vercel/node";
 
@@ -20,6 +20,8 @@ mongoose
       user: process.env.DATABASE_USER || "",
       password: process.env.DATABASE_PASSWORD || "",
     },
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
   })
   .catch(logError);
 
@@ -45,17 +47,19 @@ export default async (req: NowRequest, res: NowResponse): Promise<void> => {
 
   const Post = mongoose.model("Post");
 
-  const promises: Promise<void>[] = feed.items.map(async (item) => {
-    const { title, pubDate = "", link: url } = item;
+  const promises: Promise<null | ResponseData>[] = feed.items.map(
+    async (item) => {
+      const { title, pubDate = "", link: url } = item;
 
-    const count = await Post.count({ url });
-    if (count === 0) {
+      const count = await Post.countDocuments({ url });
+      if (count) return null;
+
       const published_at = new Date(pubDate);
       const newPost = new Post({ title, published_at, url });
       await newPost.save();
-      await tweet(`${title} ${url}`).catch(logError);
+      return tweet(`${title} ${url}`).catch(logError);
     }
-  });
+  );
 
   await Promise.all(promises).catch(logError);
 

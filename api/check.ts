@@ -5,8 +5,9 @@ import compareAsc from "date-fns/compareAsc";
 import mongoose from "mongoose";
 import Parser from "rss-parser";
 import Raven from "raven";
-import tweet, { ResponseData } from "../lib/tweet";
+import tweet from "../lib/tweet";
 import "../models/Post";
+import { ResponseData } from "twitter";
 import { NowRequest, NowResponse } from "@vercel/node";
 
 dotenv.config();

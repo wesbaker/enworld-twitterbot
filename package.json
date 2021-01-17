@@ -4,7 +4,8 @@
   "description": "Twitter bot to tweet out articles from ENWorld.org",
   "main": "index.js",
   "scripts": {
-    "test": "eslint ."
+    "eslint": "eslint --ignore-path .gitignore --ext .ts,.js .",
+    "test": "tsc && npm run eslint"
   },
   "repository": {
     "type": "git",
@@ -26,10 +27,26 @@
     "rss-parser": "^3.10.0",
     "twitter": "^1.7.1"
   },
-  "engines": {
-    "node": "10.x"
-  },
   "devDependencies": {
-    "eslint": "^7.17.0"
+    "@tsconfig/recommended": "^1.0.1",
+    "@types/mongoose": "^5.10.3",
+    "@types/raven": "^2.5.3",
+    "@types/twitter": "^1.7.0",
+    "@typescript-eslint/eslint-plugin": "^4.13.0",
+    "@typescript-eslint/parser": "^4.13.0",
+    "@vercel/node": "^1.9.0",
+    "eslint": "^7.18.0",
+    "husky": "^4.3.8",
+    "lint-staged": "^10.5.3",
+    "prettier": "^2.2.1",
+    "typescript": "^4.1.3"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }

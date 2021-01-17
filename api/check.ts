@@ -48,12 +48,12 @@ export default async (req: NowRequest, res: NowResponse): Promise<void> => {
 
   const Post = mongoose.model("Post");
 
-  const promises: Promise<null | ResponseData>[] = feed.items.map(
+  const promises: Promise<void | ResponseData>[] = feed.items.map(
     async (item) => {
       const { title, pubDate = "", link: url } = item;
 
       const count = await Post.countDocuments({ url });
-      if (count) return null;
+      if (count) return;
 
       const published_at = new Date(pubDate);
       const newPost = new Post({ title, published_at, url });

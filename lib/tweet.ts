@@ -8,7 +8,7 @@ const client = new Twitter({
 });
 
 export default (tweet: string): Promise<ResponseData | void> => {
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.VERCEL_ENV === "production") {
     return client.post("statuses/update", { status: tweet });
   } else {
     console.info(`🐦 Tweeting: ${tweet}`);

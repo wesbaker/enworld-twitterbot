@@ -27,7 +27,7 @@ mongoose
   .catch(logError);
 
 function logError(error: Error): void {
-  if (process.env.NODE_ENV !== "development") {
+  if (process.env.VERCEL_ENV !== "development") {
     Raven.captureException(error);
   }
   console.error(error);

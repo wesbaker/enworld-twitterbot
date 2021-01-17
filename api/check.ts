@@ -26,9 +26,8 @@ mongoose
 function logError(error: Error): void {
   if (process.env.NODE_ENV !== "development") {
     Raven.captureException(error);
-  } else {
-    console.error(error);
   }
+  console.error(error);
 }
 
 export default async (req: NowRequest, res: NowResponse): Promise<void> => {
@@ -65,8 +64,8 @@ export default async (req: NowRequest, res: NowResponse): Promise<void> => {
     .map(({ pubDate = "" }) => new Date(pubDate))
     .sort(compareAsc)[0];
 
-  await Post.deleteMany({ published_at: { $lt: oldestDate } });
-  await Post.deleteMany({ url: null });
+  await Post.deleteMany({ published_at: { $lt: oldestDate } }).catch(logError);
+  await Post.deleteMany({ url: null }).catch(logError);
 
   return res.status(200).end("Finished sending tweets.");
 };

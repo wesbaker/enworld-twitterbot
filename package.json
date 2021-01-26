@@ -32,7 +32,7 @@
     "@types/mongoose": "^5.10.3",
     "@types/raven": "^2.5.3",
     "@types/twitter": "^1.7.0",
-    "@typescript-eslint/eslint-plugin": "^4.14.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.0",
     "@vercel/node": "^1.9.0",
     "eslint": "^7.18.0",

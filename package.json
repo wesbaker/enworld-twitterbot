@@ -33,7 +33,7 @@
     "@types/raven": "^2.5.3",
     "@types/twitter": "^1.7.0",
     "@typescript-eslint/eslint-plugin": "^4.14.2",
-    "@typescript-eslint/parser": "^4.14.2",
+    "@typescript-eslint/parser": "^4.15.0",
     "@vercel/node": "^1.9.0",
     "eslint": "^7.19.0",
     "husky": "^4.3.8",

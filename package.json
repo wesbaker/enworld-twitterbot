@@ -36,7 +36,7 @@
     "@types/twitter": "^1.7.0",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
-    "@vercel/node": "^1.9.0",
+    "@vercel/node": "^1.9.1",
     "eslint": "^7.21.0",
     "husky": "^5.1.3",
     "lint-staged": "^10.5.4",

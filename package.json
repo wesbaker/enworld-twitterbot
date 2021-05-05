@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "date-fns": "^2.21.1",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.5.1",
     "mongoose": "^5.12.7",
     "raven": "^2.6.4",
     "rss-parser": "^3.12.0",

@@ -22,7 +22,7 @@
   "author": "Wes Baker <wes@wesbaker.com>",
   "license": "MIT",
   "dependencies": {
-    "date-fns": "^2.21.2",
+    "date-fns": "^2.21.3",
     "dotenv": "^9.0.0",
     "mongoose": "^5.12.7",
     "raven": "^2.6.4",

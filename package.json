@@ -32,7 +32,7 @@
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
     "@types/mongoose": "^5.11.97",
-    "@types/raven": "^2.5.3",
+    "@types/raven": "^2.5.4",
     "@types/twitter": "^1.7.1",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",

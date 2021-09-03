@@ -8,7 +8,7 @@ import Raven from "raven";
 import tweet from "../lib/tweet";
 import "../models/Post";
 import { ResponseData } from "twitter";
-import { NowRequest, NowResponse } from "@vercel/node";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
 dotenv.config();
 Raven.config(process.env.SENTRY_DSN).install();
@@ -18,11 +18,9 @@ mongoose
   .connect(process.env.DATABASE_URI || "", {
     dbName: process.env.DATABASE || "",
     auth: {
-      user: process.env.DATABASE_USER || "",
+      username: process.env.DATABASE_USER || "",
       password: process.env.DATABASE_PASSWORD || "",
     },
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
   })
   .catch(logError);
 
@@ -33,7 +31,10 @@ function logError(error: Error): void {
   console.error(error);
 }
 
-export default async (req: NowRequest, res: NowResponse): Promise<void> => {
+export default async (
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<void> => {
   const feed = await parser
     .parseURL("https://www.enworld.org/ewr-porta/index.rss")
     .catch(logError);
